@@ -1,31 +1,40 @@
+#! /usr/bin/env python3
+import argparse
 from PIL import Image, ImageDraw
 
 
 def main():
-    input_img = Image.open('input.jpg')
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        'source', help='source file')
+    parser.add_argument(
+        '-s', '--size', default=32, type=int, help='element size')
+    args = parser.parse_args()
+
+    input_img = Image.open(args.source)
     output_img = Image.new(
         'RGB',
         (input_img.width, input_img.height),
         color=(255, 255, 255))
 
     drw = ImageDraw.Draw(output_img)
-    side = 32
+    size = args.size
 
-    for x in range(0, input_img.width, side):
-        for y in range(0, input_img.height, side):
+    for x in range(0, input_img.width, size):
+        for y in range(0, input_img.height, size):
             rgb_one = input_img.getpixel((x, y))
             rgb_two = input_img.getpixel((x, y + 1))
 
             drw.polygon(
-                [(x, y), (x + side, y), (x + side/2, y + side)],
+                [(x, y), (x + size, y), (x + size/2, y + size)],
                 fill=rgb_one)
             drw.polygon(
-                [(x - side/2, y + side), (x, y), (x + side/2, y + side)],
+                [(x - size/2, y + size), (x, y), (x + size/2, y + size)],
                 fill=rgb_two)
 
-            if (input_img.width - x) <= side:
+            if (input_img.width - x) <= size:
                 drw.polygon(
-                    [(x + side/2, y + side), (x + side, y), (x + 3*side/2, y + side)],
+                    [(x + size/2, y + size), (x + size, y), (x + 3*size/2, y + size)],
                     fill=rgb_two)
 
     output_img.save('output.jpg')
