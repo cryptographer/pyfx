@@ -23,7 +23,7 @@ def main():
     algorithm = args.algorithm
     size = args.size
 
-    if(algorithm == 'triangles'):
+    if algorithm == 'triangles':
         for x in range(0, input_img.width, size):
             for y in range(0, input_img.height, size):
                 rgb_one = input_img.getpixel((x, y))
@@ -40,11 +40,24 @@ def main():
                     drw.polygon(
                         [(x + size/2, y + size), (x + size, y), (x + 3*size/2, y + size)],
                         fill=rgb_two)
-    elif(algorithm == 'circles'):
+
+    elif algorithm == 'circles':
         for x in range(0, input_img.width, size):
             for y in range(0, input_img.height, size):
                 rgb = input_img.getpixel((x, y))
-                drw.ellipse([(x, y), (x + size, y + size)], fill=rgb)
+
+                drw.ellipse(
+                    [(x, y), (x + size, y + size)],
+                    fill=rgb)
+
+    elif algorithm == 'pixelate':
+        for x in range(0, input_img.width, size):
+            for y in range(0, input_img.height, size):
+                rgb = input_img.getpixel((x, y))
+
+                drw.rectangle(
+                    [x, y, x + size, y + size],
+                    fill=rgb)
 
     output_img.save('output.jpg')
 
